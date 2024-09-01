@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  content String
+  date DateTime
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+}
+
+model Goal {
+  id Int @id @default(autoincrement())
+  name String
+  deadline DateTime
+  closestSubGoal String
+  previousSubGoals String[]
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+}
+
+model Exercise {
+  id Int @id @default(autoincrement())
+  name String
+  description String?
+  // deadline DateTime?
+  allTheWastedTime DateTime?
+  averageSetsPerDay Int?
+  allAmountOfSets Int?
+  // ultimateGoal String
+  // previousSubGoals String[]
+  // closestSubGoal String
+  daysOfTraining Int?
+  achived Boolean @default(false)
+  comments Comment[]
+  level Level
+  type Type
+}
+
+enum Type {
+  STATIC
+  DYNAMIC
+  OTHER
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCE
+  ELITE
+  GOD
+}
